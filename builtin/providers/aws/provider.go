@@ -116,6 +116,7 @@ func Provider() terraform.ResourceProvider {
 			"aws_availability_zones":       dataSourceAwsAvailabilityZones(),
 			"aws_ecs_container_definition": dataSourceAwsEcsContainerDefinition(),
 			"aws_iam_policy_document":      dataSourceAwsIamPolicyDocument(),
+			"aws_region":                   dataSourceAwsRegion(),
 			"aws_s3_bucket_object":         dataSourceAwsS3BucketObject(),
 			"aws_subnet":                   dataSourceAwsSubnet(),
 			"aws_vpc":                      dataSourceAwsVpc(),
