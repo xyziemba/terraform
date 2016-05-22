@@ -113,9 +113,10 @@ func Provider() terraform.ResourceProvider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"aws_ami":                      dataSourceAwsAmi(),
 			"aws_availability_zones":       dataSourceAwsAvailabilityZones(),
+			"aws_ecs_container_definition": dataSourceAwsEcsContainerDefinition(),
 			"aws_iam_policy_document":      dataSourceAwsIamPolicyDocument(),
 			"aws_s3_bucket_object":         dataSourceAwsS3BucketObject(),
-			"aws_ecs_container_definition": dataSourceAwsEcsContainerDefinition(),
+			"aws_subnet":                   dataSourceAwsSubnet(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
