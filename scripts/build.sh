@@ -37,7 +37,7 @@ if ! which gox > /dev/null; then
 fi
 
 # instruct gox to build statically linked binaries
-export CGO_ENABLED=0
+export CGO_ENABLED=1
 
 # Allow LD_FLAGS to be appended during development compilations
 LD_FLAGS="-X main.GitCommit=${GIT_COMMIT}${GIT_DIRTY} $LD_FLAGS"
