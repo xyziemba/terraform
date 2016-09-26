@@ -155,6 +155,24 @@ func resourceArmVirtualMachine() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 						},
+
+						"disk_encryption_key": {
+							Type:     schema.TypeSet,
+							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"vault_id": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"secret_url": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+								},
+							},
+						},
 					},
 				},
 				Set: resourceArmVirtualMachineStorageOsDiskHash,
@@ -1202,6 +1220,7 @@ func expandAzureRmVirtualMachineOsDisk(d *schema.ResourceData) (*compute.OSDisk,
 	vhdURI := disk["vhd_uri"].(string)
 	imageURI := disk["image_uri"].(string)
 	createOption := disk["create_option"].(string)
+	encryptionKeys := disk["disk_encryption_key"].(*schema.Set).List()
 
 	osDisk := &compute.OSDisk{
 		Name: &name,
@@ -1229,6 +1248,22 @@ func expandAzureRmVirtualMachineOsDisk(d *schema.ResourceData) (*compute.OSDisk,
 
 	if v := disk["caching"].(string); v != "" {
 		osDisk.Caching = compute.CachingTypes(v)
+	}
+
+	if len(encryptionKeys) > 0 {
+		if v := encryptionKeys[0].(map[string]interface{}); v != nil {
+			vaultID := v["vault_id"].(string)
+			secretURI := v["secret_url"].(string)
+
+			osDisk.EncryptionSettings = &compute.DiskEncryptionSettings{
+				DiskEncryptionKey: &compute.KeyVaultSecretReference{
+					SecretURL: &secretURI,
+					SourceVault: &compute.SubResource{
+						ID: &vaultID,
+					},
+				},
+			}
+		}
 	}
 
 	return osDisk, nil
